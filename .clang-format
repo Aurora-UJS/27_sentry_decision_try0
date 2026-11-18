@@ -1,0 +1,13 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+Standard: c++20
+ColumnLimit: 100        # 允许更长的单行代码，适合长函数名
+IndentWidth: 4          # 4空格缩进，层级更清晰
+TabWidth: 4
+UseTab: Never
+PointerAlignment: Left  # 指针靠左 (例如 int* a)
+ReflowComments: true
+SortIncludes: CaseSensitive
+AllowShortFunctionsOnASingleLine: Empty # 禁止将短函数挤在一行
+...

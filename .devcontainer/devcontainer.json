@@ -1,0 +1,28 @@
+{
+    "name": "Robotics C++20 Dev Env",
+    "build": {
+        "dockerfile": "Containerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "twxs.cmake",
+                "ms-vscode.cmake-tools"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "C_Cpp.formatting": "disabled",
+                "C_Cpp.intelliSenseEngine": "disabled",
+                "clangd.path": "/usr/bin/clangd",
+                "clangd.arguments": [
+                    "--background-index",
+                    "--compile-commands-dir=${workspaceFolder}/build",
+                    "--clang-tidy"
+                ]
+            }
+        }
+    },
+    "remoteUser": "devuser",
+    "postCreateCommand": "pre-commit install"
+}

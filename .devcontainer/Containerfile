@@ -1,0 +1,35 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 换清华源以加速包管理器的下载速度
+RUN sed -i 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+
+# 安装基础构建工具和 Python
+RUN apt-get update && apt-get install -y \
+    wget gnupg software-properties-common \
+    git cmake ninja-build python3 python3-pip sudo
+
+# 安装 LLVM 20全家桶
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 20 all && \
+    ln -s /usr/bin/clang-20 /usr/bin/clang && \
+    ln -s /usr/bin/clang++-20 /usr/bin/clang++ && \
+    ln -s /usr/bin/clang-format-20 /usr/bin/clang-format && \
+    ln -s /usr/bin/clangd-20 /usr/bin/clangd
+
+# 安装 Conan 和 pre-commit
+RUN pip3 install conan pre-commit
+
+# 创建一个非 root 用户 devuser (密码也是 devuser) 避免编译权限冲突
+RUN useradd -m -s /bin/bash -G sudo devuser && \
+    echo 'devuser:devuser' | chpasswd && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER devuser
+WORKDIR /workspace
+
+# 初始化 Conan 默认配置
+RUN conan profile detect
